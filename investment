@@ -1,0 +1,50 @@
+#include <iostream>
+#define M 5//总钱数M万
+#define N 4//总项目数N
+using namespace std;
+//收益函数：一共四个项目，每个项目下标为投入钱数，数组值为取得的收益
+int f[N][M + 1] = {
+    {0, 11, 12, 13, 14, 15},
+    {0,  0,  5, 10, 15, 20},
+    {0,  2, 10, 30, 32, 40},
+    {0, 20, 21, 22, 23, 24}
+};
+int mem[M][N];//备忘录
+int d[M][N];//记录与分配相关，eg：d[4][3]记录的是5万元分配给前4个项目时，第四个项目分配了多少钱
+int Invest_Promble(int m, int n)//用不超过m元钱投资前n个项目
+{
+    int i, F, temp0, temp1;
+    temp0 = mem[m - 1][n - 1];
+    if(temp0 != 0){
+        return temp0;
+    }
+    else{
+        F = f[n - 1][m];
+        if(n == 1) d[m - 1][n - 1] = m;
+        else{
+            for(i = m - 1; i >= 0; --i){
+                temp1 = f[n - 1][i] + Invest_Promble(m - i, n - 1);
+                if(temp1 > F){
+                    F = temp1;
+                    d[m - 1][n - 1] = i;
+                }
+            }
+        }
+        mem[m - 1][n - 1] = F;
+        //cout<<m<<" "<<n<<" "<<F<<endl;
+        return F;
+    }
+}
+void Distribution(int m, int n)
+{
+    if(n == 0) return;
+    int temp = d[m - 1][n - 1];
+    cout<<"项目"<<n<<"投入："<<temp<<"万元"<<endl;
+    Distribution(m -= temp, --n);
+} 
+int main()
+{
+    cout<<"最大收益："<<Invest_Promble(M, N)<<"万元"<<endl;
+    Distribution(M, N);
+    return 0;
+}
