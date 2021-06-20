@@ -17,3 +17,4 @@ int main()
     scanf("%d",&x);
     printf("%d\n",Search(T,n,x));
 	return 0;
+}
