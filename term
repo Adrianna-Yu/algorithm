@@ -1,30 +1,22 @@
-#include<cstdio>
-#include<cstring>
-#include<iostream>
-#include<algorithm>
-#define MAXN 1<<30
-using namespace std;
-int f[6005*6],n,m;
-int main(){
-    #ifndef ONLINE_JUDGE
-    freopen("prob.in","r",stdin);
-    freopen("prob.out","w",stdout);
-    #endif
-    scanf("%d",&n);m=n*6;
-//  memset(f,127,sizeof(f));f[0]=0;
-    for(int i=1;i<=n;i++){
-        int x,y,z;
-        scanf("%d%d%d",&x,&y,&z);
-        for(int j=m;j>=0;j--){
-            int Min=MAXN;
-            if(x&&j-x>=0) Min=min(f[j-x],Min);
-            if(y) Min=min(f[j]+y,Min);
-            if(z&&j-z>=0) Min=min(f[j-z]+z,Min);
-            f[j]=Min;
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+int f[30005];
+int main() {
+    int n;scanf("%d",&n);int m=0;
+    memset(f,0x7f,sizeof(f));f[0]=0;
+    for(register int i=1;i<=n;++i) {
+        int t1,t2,t3;scanf("%d%d%d",&t1,&t2,&t3);
+        m+=std::max(t1,std::max(t2,t3));
+        for(register int j=m;j>=0;--j) {
+            int last=f[j];f[j]=0x3f3f3f3f;
+            if(t1&&j-t1>=0) f[j]=std::min(f[j],f[j-t1]);
+            if(t2) f[j]=std::min(f[j],last+t2);
+            if(t3&&j-t3>=0) f[j]=std::min(f[j],f[j-t3]+t3);
         }
     }
-    int Ans=MAXN;
-    for(int i=0;i<=m;i++) Ans=min(Ans,max(f[i],i));
-    printf("%d",Ans);
+    int ans=0x3f3f3f3f;
+    for(register int i=0;i<=m;++i) ans=std::min(ans,std::max(i,f[i]));
+    printf("%d\n",ans);
     return 0;
 }
